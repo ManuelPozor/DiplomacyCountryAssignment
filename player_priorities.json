@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Manuel",
+        "prio1": "IT",
+        "prio2": "AH",
+        "prio3": "GE"
+    },
+    {
+        "name": "Jonas",
+        "prio1": "TU",
+        "prio2": "GE",
+        "prio3": "FR"
+    },
+    {
+        "name": "Martin",
+        "prio1": "FR",
+        "prio2": "RU",
+        "prio3": "AH"
+    },
+    {
+        "name": "Robin",
+        "prio1": "GB",
+        "prio2": "TU",
+        "prio3": "RU"
+    },
+    {
+        "name": "Marvin",
+        "prio1": "TU",
+        "prio2": "GE",
+        "prio3": "FR"
+    },
+    {
+        "name": "Lena",
+        "prio1": "RU",
+        "prio2": "FR",
+        "prio3": "AH"
+    },
+    {
+        "name": "Gregor",
+        "prio1": "IT",
+        "prio2": "GE",
+        "prio3": "RU"
+    }
+]
