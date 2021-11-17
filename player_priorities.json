@@ -7,7 +7,7 @@
     },
     {
         "name": "Jonas",
-        "prio1": "TU",
+        "prio1": "OE",
         "prio2": "GE",
         "prio3": "FR"
     },
@@ -20,12 +20,12 @@
     {
         "name": "Robin",
         "prio1": "GB",
-        "prio2": "TU",
+        "prio2": "OE",
         "prio3": "RU"
     },
     {
         "name": "Marvin",
-        "prio1": "TU",
+        "prio1": "OE",
         "prio2": "GE",
         "prio3": "FR"
     },
