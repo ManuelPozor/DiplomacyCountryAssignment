@@ -1,5 +1,6 @@
-from flask import (Flask, Response, flash, get_flashed_messages, redirect,
-                   render_template, request, url_for)
+from priority_assignment import assign_countries_by_priority
+
+from flask import (Flask, redirect, render_template, request, url_for)
 from pathlib import Path
 import json
 import uuid
@@ -28,19 +29,31 @@ def get_player_by_id(id):
 
 @app.route('/result/<id>')
 def result(id):
-    return 'welcome %s' % id
+    player_name = get_player_by_id(id)["name"]
+    with open("country_distribution.txt", "r") as file:
+        for line in file.readlines():
+            # remove player number, then separate name from tag
+            player_country = line.split(":")[-1]
+            p_name, country_tag = player_country.split(" ")
+            country_ind = unique_country_tags.index(country_tag)
+            if p_name == player_name:
+                return render_template("result.html",
+                                       id=id,
+                                       country=country_names[country_ind])
+    return 'ERROR: Unknown player in results'
 
 
 @app.route("/<id>")
-def start(id):
+def country_selection(id):
     # check if player id correct
     player = get_player_by_id(id)
     if player is None:
-        return 'ERROR: Unknown player'
+        return 'ERROR: Unknown player in country selection'
     # load priorities
     priorities = [player["prio1"], player["prio2"], player["prio3"]]
     already_submitted = player["submitted"]
     # TODO if assignment over redirect straight to result
+    # return redirect(url_for('result'), id=id)
     return render_template("country_selection.html",
                            id=id,
                            tags=unique_country_tags,
@@ -78,9 +91,10 @@ def priorities_submitted():
     for p in players:
         if not p["submitted"]:
             # TODO throws error when submitting again
-            return redirect(url_for('start', id=id))
+            return redirect(url_for('country_selection', id=id))
 
-    # TODO assignment
+    # country assignment
+    assign_countries_by_priority(players_file)
     return redirect(url_for('result'), id=id)
 
 
