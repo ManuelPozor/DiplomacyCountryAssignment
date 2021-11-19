@@ -15,9 +15,14 @@ country_names = [
 ]
 
 
-def get_player_by_id(id):
+def get_players():
     with open(players_file, "r") as file:
         players = [player for player in json.load(file)]
+    return players
+
+
+def get_player_by_id(id):
+    players = get_players()
 
     player_data = [p for p in players if p["id"] == id]
     if len(player_data) > 0:
@@ -34,11 +39,11 @@ def result(id):
         for line in file.readlines():
             # remove player number, then separate name from tag
             player_country = line.split(":")[-1]
-            p_name, country_tag = player_country.split(" ")
+            p_name, country_tag = player_country.split()
             country_ind = unique_country_tags.index(country_tag)
             if p_name == player_name:
                 return render_template("result.html",
-                                       id=id,
+                                       player_name=player_name,
                                        country=country_names[country_ind])
     return 'ERROR: Unknown player in results'
 
@@ -52,10 +57,18 @@ def country_selection(id):
     # load priorities
     priorities = [player["prio1"], player["prio2"], player["prio3"]]
     already_submitted = player["submitted"]
-    # TODO if assignment over redirect straight to result
-    # return redirect(url_for('result'), id=id)
+
+    if already_submitted:
+        # check if assignment already over, i.e. all players submitted
+        all_submited = True
+        for p in get_players():
+            if not p["submitted"]:
+                all_submited = False
+        if all_submited:
+            return redirect(url_for('result', id=id))
     return render_template("country_selection.html",
                            id=id,
+                           player_name=player["name"],
                            tags=unique_country_tags,
                            country_names=country_names,
                            priorities=priorities,
@@ -74,8 +87,7 @@ def priorities_submitted():
     prio3 = request.args.get('prio3')
     id = request.args.get('id')
 
-    with open(players_file, "r") as file:
-        players = [player for player in json.load(file)]
+    players = get_players()
     # set status to submitted
     for p in players:
         if p["id"] == id:
@@ -90,12 +102,12 @@ def priorities_submitted():
     # check if all players have submitted
     for p in players:
         if not p["submitted"]:
-            # TODO throws error when submitting again
             return redirect(url_for('country_selection', id=id))
 
     # country assignment
     assign_countries_by_priority(players_file)
-    return redirect(url_for('result'), id=id)
+    print("Countries have been assigned.")
+    return redirect(url_for('result', id=id))
 
 
 if __name__ == "__main__":
@@ -105,8 +117,7 @@ if __name__ == "__main__":
     # TODO arg to generate new ids
 
     # create player ids in json
-    with open(players_file, "r") as file:
-        players = [player for player in json.load(file)]
+    players = get_players()
     for p in players:
         if len(p["id"]) == 0:
             p["id"] = str(uuid.uuid4())
