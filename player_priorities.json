@@ -1,41 +1,48 @@
 [
     {
+        "id": "2cdc9529-35fe-4fd1-80f3-96f9a7f5e75f",
         "name": "Manuel",
         "prio1": "IT",
         "prio2": "AH",
         "prio3": "GE"
     },
     {
+        "id": "6c1bbae1-8c8f-4140-a74f-4af39975fca0",
         "name": "Jonas",
         "prio1": "OE",
         "prio2": "GE",
         "prio3": "FR"
     },
     {
+        "id": "1f8d38a8-fee0-47cb-952e-f04762062b2f",
         "name": "Martin",
         "prio1": "FR",
         "prio2": "RU",
         "prio3": "AH"
     },
     {
+        "id": "bac90afc-e6b3-4b13-9cdd-b4665254ad3f",
         "name": "Robin",
         "prio1": "GB",
         "prio2": "OE",
         "prio3": "RU"
     },
     {
+        "id": "eda4c33d-511c-4cc0-b469-5e757625df33",
         "name": "Marvin",
         "prio1": "OE",
         "prio2": "GE",
         "prio3": "FR"
     },
     {
+        "id": "0e573b0b-3e02-49b1-9515-9d3ebc7b4ad5",
         "name": "Lena",
         "prio1": "RU",
         "prio2": "FR",
         "prio3": "AH"
     },
     {
+        "id": "823587b1-a235-4f46-b678-8970797cc689",
         "name": "Gregor",
         "prio1": "IT",
         "prio2": "GE",
