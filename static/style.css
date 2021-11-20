@@ -11,6 +11,19 @@
     background: #d2d1d4;
 }
 
+.result_form{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10vh;
+    padding-top: 1em;
+    padding-bottom: 2em;
+    padding-right: 1em;
+    padding-left: 1em;
+    width: 300px;
+    background: #d2d1d4;
+}
+
 h3{
     color: #2959dd;
     font-family: sans-serif;
