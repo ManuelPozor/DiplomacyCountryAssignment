@@ -32,6 +32,7 @@
 
             <h4>First Priority</h4>
             <select name="prio1">
+                <option style="display:none"></option>
                 {% for c_tag, c_name in zip(tags, country_names) %}
                 <option value="{{c_tag}}" {{ " selected" if c_tag==priorities[0] }}>
                     {{c_name}}
@@ -41,6 +42,7 @@
 
             <h4>Second Priority</h4>
             <select name="prio2">
+                <option style="display:none"></option>
                 {% for c_tag, c_name in zip(tags, country_names) %}
                 <option value="{{c_tag}}" {{ " selected" if c_tag==priorities[1] }}>
                     {{c_name}}
@@ -50,6 +52,7 @@
 
             <h4>Third Priority</h4>
             <select name="prio3">
+                <option style="display:none"></option>
                 {% for c_tag, c_name in zip(tags, country_names) %}
                 <option value="{{c_tag}}" {{ " selected" if c_tag==priorities[2] }}>
                     {{c_name}}
