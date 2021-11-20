@@ -1,0 +1,40 @@
+.country_select_form {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10vh;
+    padding-top: 1em;
+    padding-bottom: 2em;
+    padding-right: 1em;
+    padding-left: 1em;
+    width: 300px;
+    background: #d2d1d4;
+}
+
+h3{
+    color: #2959dd;
+    font-family: sans-serif;
+}
+
+.button{
+    display:inline-block;
+    text-align: center;
+    font-size: 100%;
+    font-family: 'Roboto', Helvetica, sans-serif;
+    font-weight: 800;
+    color:#FFFFFF;
+    text-transform: uppercase;
+    background-color: #3369ff;
+    margin-top: 1em;
+    padding: 0.5em;
+    border-radius: .2em;
+    box-sizing: border-box;
+}
+
+.button:hover{
+    background-color: #235cfa;
+}
+
+.button:focus{
+    background-color: #0646f8;
+}
