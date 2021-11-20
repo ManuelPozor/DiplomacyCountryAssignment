@@ -3,12 +3,12 @@ from priority_assignment import assign_countries_by_priority
 from flask import (Flask, redirect, render_template, request, url_for, flash)
 import os
 from pathlib import Path
+import argparse
 import json
 import uuid
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-players_file = Path("player_priorities.json")
 
 unique_country_tags = ["GB", "FR", "GE", "IT", "AH", "RU", "OE"]
 country_names = [
@@ -37,7 +37,7 @@ def result(id):
     if not all_submited:
         return redirect(url_for('country_selection', id=id))
 
-    with open("country_distribution.txt", "r") as file:
+    with open(output_file, "r") as file:
         for line in file.readlines():
             # remove player number, then separate name from tag
             player_country = line.split(":")[-1]
@@ -120,20 +120,40 @@ def priorities_submitted():
 
 
 if __name__ == "__main__":
-    # parser = argparse.ArgumentParser(description='Starts a local webserver.')
-    # args = parser.parse_args()
+    parser = argparse.ArgumentParser(
+        description=
+        'Starts a local webserver for the diplomacy game country selection.')
+    parser.add_argument(
+        '--json',
+        help='Storage json file for the player data (default: %(default)s)',
+        type=str,
+        default="player_priorities.json")
+    parser.add_argument(
+        '--out',
+        help='Text file to store the result (default: %(default)s)',
+        type=str,
+        default="country_distribution.txt")
+    parser.add_argument('--port',
+                        help='Webserver port (default: %(default)s)',
+                        type=int,
+                        default=5000)
+    parser.add_argument('--id-gen',
+                        help='Generate new player IDs (default: %(default)s)',
+                        type=bool,
+                        default=False)
+    args = parser.parse_args()
 
-    # TODO arg to generate new ids
+    players_file = Path(args.json)
+    output_file = Path(args.out)
 
     # create player ids in json
     players = get_players()
     for p in players:
-        if len(p["id"]) == 0:
+        if len(p["id"]) == 0 or args.id_gen:
             p["id"] = str(uuid.uuid4())
 
     with open(players_file, "w") as file:
         json.dump(players, file, indent=4, sort_keys=True)
 
-    # app.secret_key = os.urandom(24)
     print("Starting webserver ...")
-    app.run()
+    app.run(port=args.port)
