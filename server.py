@@ -25,13 +25,8 @@ def get_players():
 
 def get_player_by_id(id):
     players = get_players()
-
-    player_data = [p for p in players if p["id"] == id]
-    if len(player_data) > 0:
-        player_data = player_data[0]
-    else:
-        return None
-    return player_data
+    players_by_id = {p['id']: p for p in players}
+    return players_by_id.get(id)
 
 
 @app.route('/result/<id>')
@@ -41,6 +36,7 @@ def result(id):
     all_submited = all(p["submitted"] for p in get_players())
     if not all_submited:
         return redirect(url_for('country_selection', id=id))
+
     with open("country_distribution.txt", "r") as file:
         for line in file.readlines():
             # remove player number, then separate name from tag
@@ -102,12 +98,12 @@ def priorities_submitted():
 
     players = get_players()
     # set status to submitted
-    for p in players:
-        if p["id"] == id:
-            p["submitted"] = True
-            p["prio1"] = prio1
-            p["prio2"] = prio2
-            p["prio3"] = prio3
+    player = get_player_by_id(id)
+    player["submitted"] = True
+    player["prio1"] = prio1
+    player["prio2"] = prio2
+    player["prio3"] = prio3
+
     # save player in json
     with open(players_file, "w") as file:
         json.dump(players, file, indent=4, sort_keys=True)
@@ -134,6 +130,7 @@ if __name__ == "__main__":
     for p in players:
         if len(p["id"]) == 0:
             p["id"] = str(uuid.uuid4())
+
     with open(players_file, "w") as file:
         json.dump(players, file, indent=4, sort_keys=True)
 
