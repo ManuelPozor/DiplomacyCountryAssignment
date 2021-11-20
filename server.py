@@ -32,10 +32,13 @@ def get_player_by_id(id):
     return player_data
 
 
-# TODO you can query results before assignment done
 @app.route('/result/<id>')
 def result(id):
     player_name = get_player_by_id(id)["name"]
+    # check if assignment really over, i.e. all players submitted
+    all_submited = all(p["submitted"] for p in get_players())
+    if not all_submited:
+        return redirect(url_for('country_selection', id=id))
     with open("country_distribution.txt", "r") as file:
         for line in file.readlines():
             # remove player number, then separate name from tag
