@@ -32,6 +32,7 @@ def get_player_by_id(id):
     return player_data
 
 
+# TODO you can query results before assignment done
 @app.route('/result/<id>')
 def result(id):
     player_name = get_player_by_id(id)["name"]
@@ -60,10 +61,7 @@ def country_selection(id):
 
     if already_submitted:
         # check if assignment already over, i.e. all players submitted
-        all_submited = True
-        for p in get_players():
-            if not p["submitted"]:
-                all_submited = False
+        all_submited = all(p["submitted"] for p in get_players())
         if all_submited:
             return redirect(url_for('result', id=id))
     return render_template("country_selection.html",
@@ -72,7 +70,8 @@ def country_selection(id):
                            tags=unique_country_tags,
                            country_names=country_names,
                            priorities=priorities,
-                           submitted=already_submitted)
+                           submitted=already_submitted,
+                           zip=zip)
 
 
 @app.route("/")
@@ -86,6 +85,8 @@ def priorities_submitted():
     prio2 = request.args.get('prio2')
     prio3 = request.args.get('prio3')
     id = request.args.get('id')
+
+    # TODO check for duplicate entries, redircet
 
     players = get_players()
     # set status to submitted
