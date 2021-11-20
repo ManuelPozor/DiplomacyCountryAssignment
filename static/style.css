@@ -51,3 +51,17 @@ h3{
 .button:focus{
     background-color: #0646f8;
 }
+
+.alert-warning {
+    padding: 12px;
+    border-radius: 3px;
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    border: 2px solid rgba(255, 166, 0, 0.411);
+    background-color: rgba(255, 123, 0, 0.11);
+    color: black;
+  }
+
+  .alert-warning.closed{
+      display: none;
+  }

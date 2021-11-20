@@ -1,11 +1,13 @@
 from priority_assignment import assign_countries_by_priority
 
-from flask import (Flask, redirect, render_template, request, url_for)
+from flask import (Flask, redirect, render_template, request, url_for, flash)
+import os
 from pathlib import Path
 import json
 import uuid
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 players_file = Path("player_priorities.json")
 
 unique_country_tags = ["GB", "FR", "GE", "IT", "AH", "RU", "OE"]
@@ -89,7 +91,14 @@ def priorities_submitted():
     prio3 = request.args.get('prio3')
     id = request.args.get('id')
 
-    # TODO check for duplicate entries, redircet
+    # check for duplicate entries
+    priorities = [prio1, prio2, prio3]
+    for p in priorities:
+        if priorities.count(p) > 1:
+            flash(
+                "Duplicate entries, please select one country for each priority!"
+            )
+            return redirect(url_for('country_selection', id=id))
 
     players = get_players()
     # set status to submitted
