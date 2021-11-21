@@ -87,12 +87,17 @@ def priorities_submitted():
     prio3 = request.args.get('prio3')
     id = request.args.get('id')
 
-    # check for duplicate entries
+    # check for empty or duplicate entries
     priorities = [prio1, prio2, prio3]
     for p in priorities:
+        if p == "":
+            flash(
+                "No country selected, please choose one country for each priority!"
+            )
+            return redirect(url_for('country_selection', id=id))
         if priorities.count(p) > 1:
             flash(
-                "Duplicate entries, please select one country for each priority!"
+                "Duplicate entries, please select different countries for each priority!"
             )
             return redirect(url_for('country_selection', id=id))
 
