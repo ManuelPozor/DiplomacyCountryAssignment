@@ -174,4 +174,4 @@ if __name__ == "__main__":
         json.dump(players, file, indent=4, sort_keys=True)
 
     print("Starting webserver ...")
-    app.run(port=args.port)
+    app.run(port=args.port, threaded=False, processes=1, host="::")
