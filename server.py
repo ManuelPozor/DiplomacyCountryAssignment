@@ -144,19 +144,30 @@ if __name__ == "__main__":
                         default=5000)
     parser.add_argument('--id-gen',
                         help='Generate new player IDs (default: %(default)s)',
-                        type=bool,
+                        action='store_true',
                         default=False)
+    parser.add_argument(
+        '--reset',
+        help=
+        'Delete all player selections, make empty country slots instead (default: %(default)s)',
+        action='store_true',
+        default=False)
     args = parser.parse_args()
 
     players_file = Path(args.json)
     output_file = Path(args.out)
 
-    #TODO reset player choices
-
     # create player ids in json
     players = get_players()
     for p in players:
+        if args.reset:
+            # reset player choices
+            p["prio1"] = ""
+            p["prio2"] = ""
+            p["prio3"] = ""
+            p["submitted"] = False
         if len(p["id"]) == 0 or args.id_gen:
+            # generate new player id
             p["id"] = str(uuid.uuid4())
 
     with open(players_file, "w") as file:
