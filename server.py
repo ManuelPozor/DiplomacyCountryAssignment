@@ -23,15 +23,15 @@ def get_players():
     return players
 
 
-def get_player_by_id(id):
+def get_players_by_id():
     players = get_players()
     players_by_id = {p['id']: p for p in players}
-    return players_by_id.get(id)
+    return players_by_id
 
 
 @app.route('/result/<id>')
 def result(id):
-    player_name = get_player_by_id(id)["name"]
+    player_name = get_players_by_id()[id]["name"]
     # check if assignment really over, i.e. all players submitted
     all_submited = all(p["submitted"] for p in get_players())
     if not all_submited:
@@ -53,7 +53,7 @@ def result(id):
 @app.route("/<id>")
 def country_selection(id):
     # check if player id correct
-    player = get_player_by_id(id)
+    player = get_players_by_id().get(id)
     if player is None:
         return 'ERROR: Unknown player in country selection'
     # load priorities
@@ -96,13 +96,13 @@ def priorities_submitted():
             )
             return redirect(url_for('country_selection', id=id))
 
-    players = get_players()
+    players = get_players_by_id()
     # set status to submitted
-    player = get_player_by_id(id)
-    player["submitted"] = True
-    player["prio1"] = prio1
-    player["prio2"] = prio2
-    player["prio3"] = prio3
+    players[id]["submitted"] = True
+    players[id]["prio1"] = prio1
+    players[id]["prio2"] = prio2
+    players[id]["prio3"] = prio3
+    players = [dict for _, dict in players.items()]
 
     # save player in json
     with open(players_file, "w") as file:
@@ -145,6 +145,8 @@ if __name__ == "__main__":
 
     players_file = Path(args.json)
     output_file = Path(args.out)
+
+    #TODO reset player choices
 
     # create player ids in json
     players = get_players()
