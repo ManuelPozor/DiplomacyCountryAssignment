@@ -6,6 +6,10 @@ unique_country_tags = ["GB", "FR", "GE", "IT", "AH", "RU", "OE"]
 
 
 def assign_countries_by_priority(prioritiy_file):
+    ''' Evaluates the country selections of the players in a given file.
+        The countries are assigned by weighting the priorities and determining the combinations resulting in the lowest cost.
+    '''
+
     with open(prioritiy_file, "r") as file:
         players = [player for player in json.load(file)]
 

@@ -18,12 +18,14 @@ country_names = [
 
 
 def get_players():
+    ''' Read list of players from json file. '''
     with open(players_file, "r") as file:
         players = [player for player in json.load(file)]
     return players
 
 
 def get_players_by_id():
+    ''' Return dict of players with their ID as key. '''
     players = get_players()
     players_by_id = {p['id']: p for p in players}
     return players_by_id
@@ -31,6 +33,9 @@ def get_players_by_id():
 
 @app.route('/result/<id>')
 def result(id):
+    ''' The result page is shown only once countries have been assigned.
+        It tells the players which country has been assigned to them.
+    '''
     player_name = get_players_by_id()[id]["name"]
     # check if assignment really over, i.e. all players submitted
     all_submited = all(p["submitted"] for p in get_players())
@@ -52,6 +57,9 @@ def result(id):
 
 @app.route("/<id>")
 def country_selection(id):
+    ''' Country selection screen only accesible for each individual player.
+        Here, they can submit their priorities.
+    '''
     # check if player id correct
     player = get_players_by_id().get(id)
     if player is None:
@@ -82,6 +90,9 @@ def home():
 
 @app.route('/search', methods=['GET'])
 def priorities_submitted():
+    ''' Redirection link that processes the country selection and passes to 
+        either the result page or the selection screen.
+    '''
     prio1 = request.args.get('prio1')
     prio2 = request.args.get('prio2')
     prio3 = request.args.get('prio3')
@@ -137,7 +148,7 @@ if __name__ == "__main__":
         '--out',
         help='Text file to store the result (default: %(default)s)',
         type=str,
-        default="country_distribution.txt")
+        default="result.txt")
     parser.add_argument('--port',
                         help='Webserver port (default: %(default)s)',
                         type=int,
