@@ -2,6 +2,7 @@ from data_processing.player_data import PlayerData
 
 from itertools import product
 import random
+import argparse
 
 unique_country_tags = ["GB", "FR", "GE", "IT", "AH", "RU", "OE"]
 
@@ -66,5 +67,15 @@ def assign_countries_by_priority(prioritiy_file):
 
 
 if __name__ == "__main__":
-    prioritiy_file = "player_priorities.json"
+    parser = argparse.ArgumentParser(
+        description=
+        'Assigns countries to players based on their selection stored in a given json file.'
+    )
+    parser.add_argument(
+        '--json',
+        help='Storage json file for the player data (default: %(default)s)',
+        type=str,
+        default="player_priorities.json")
+    args = parser.parse_args()
+    prioritiy_file = args.json
     assign_countries_by_priority(prioritiy_file)
