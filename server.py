@@ -1,10 +1,10 @@
 from priority_assignment import assign_countries_by_priority
+from data_processing.player_data import PlayerData
 
 from flask import (Flask, redirect, render_template, request, url_for, flash)
 import os
 from pathlib import Path
 import argparse
-import json
 import uuid
 
 app = Flask(__name__)
@@ -17,28 +17,15 @@ country_names = [
 ]
 
 
-def get_players():
-    ''' Read list of players from json file. '''
-    with open(players_file, "r") as file:
-        players = [player for player in json.load(file)]
-    return players
-
-
-def get_players_by_id():
-    ''' Return dict of players with their ID as key. '''
-    players = get_players()
-    players_by_id = {p['id']: p for p in players}
-    return players_by_id
-
-
 @app.route('/result/<id>')
 def result(id):
     ''' The result page is shown only once countries have been assigned.
         It tells the players which country has been assigned to them.
     '''
-    player_name = get_players_by_id()[id]["name"]
-    # check if assignment really over, i.e. all players submitted
-    all_submited = all(p["submitted"] for p in get_players())
+    with PlayerData(players_file) as player_data:
+        player_name = player_data.get_players_by_id()[id]["name"]
+        # check if assignment really over, i.e. all players submitted
+        all_submited = all(p["submitted"] for p in player_data.get_players())
     if not all_submited:
         return redirect(url_for('country_selection', id=id))
 
@@ -60,19 +47,21 @@ def country_selection(id):
     ''' Country selection screen only accesible for each individual player.
         Here, they can submit their priorities.
     '''
-    # check if player id correct
-    player = get_players_by_id().get(id)
-    if player is None:
-        return 'ERROR: Unknown player in country selection'
-    # load priorities
-    priorities = [player["prio1"], player["prio2"], player["prio3"]]
-    already_submitted = player["submitted"]
+    with PlayerData(players_file) as player_data:
+        # check if player id correct
+        player = player_data.get_players_by_id().get(id)
+        if player is None:
+            return 'ERROR: Unknown player in country selection'
+        # load priorities
+        priorities = [player["prio1"], player["prio2"], player["prio3"]]
+        already_submitted = player["submitted"]
 
-    if already_submitted:
-        # check if assignment already over, i.e. all players submitted
-        all_submited = all(p["submitted"] for p in get_players())
-        if all_submited:
-            return redirect(url_for('result', id=id))
+        if already_submitted:
+            # check if assignment already over, i.e. all players submitted
+            all_submited = all(p["submitted"]
+                               for p in player_data.get_players())
+            if all_submited:
+                return redirect(url_for('result', id=id))
     return render_template("country_selection.html",
                            id=id,
                            player_name=player["name"],
@@ -112,17 +101,14 @@ def priorities_submitted():
             )
             return redirect(url_for('country_selection', id=id))
 
-    players = get_players_by_id()
-    # set status to submitted
-    players[id]["submitted"] = True
-    players[id]["prio1"] = prio1
-    players[id]["prio2"] = prio2
-    players[id]["prio3"] = prio3
-    players = [dict for _, dict in players.items()]
-
-    # save player in json
-    with open(players_file, "w") as file:
-        json.dump(players, file, indent=4, sort_keys=True)
+    with PlayerData(players_file) as player_data:
+        players = player_data.get_players_by_id()
+        # set status to submitted
+        players[id]["submitted"] = True
+        players[id]["prio1"] = prio1
+        players[id]["prio2"] = prio2
+        players[id]["prio3"] = prio3
+        players = [dict for _, dict in players.items()]
 
     # check if all players have submitted
     for p in players:
@@ -168,21 +154,19 @@ if __name__ == "__main__":
     players_file = Path(args.json)
     output_file = Path(args.out)
 
-    # create player ids in json
-    players = get_players()
-    for p in players:
-        if args.reset:
-            # reset player choices
-            p["prio1"] = ""
-            p["prio2"] = ""
-            p["prio3"] = ""
-            p["submitted"] = False
-        if len(p["id"]) == 0 or args.id_gen:
-            # generate new player id
-            p["id"] = str(uuid.uuid4())
-
-    with open(players_file, "w") as file:
-        json.dump(players, file, indent=4, sort_keys=True)
+    with PlayerData(players_file) as player_data:
+        # create player ids in json
+        players = player_data.get_players()
+        for p in players:
+            if args.reset:
+                # reset player choices
+                p["prio1"] = ""
+                p["prio2"] = ""
+                p["prio3"] = ""
+                p["submitted"] = False
+            if len(p["id"]) == 0 or args.id_gen:
+                # generate new player id
+                p["id"] = str(uuid.uuid4())
 
     print("Starting webserver ...")
     app.run(port=args.port, threaded=False, processes=1, host="::")

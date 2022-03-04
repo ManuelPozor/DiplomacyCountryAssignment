@@ -1,4 +1,5 @@
-import json
+from data_processing.player_data import PlayerData
+
 from itertools import product
 import random
 
@@ -10,8 +11,8 @@ def assign_countries_by_priority(prioritiy_file):
         The countries are assigned by weighting the priorities and determining the combinations resulting in the lowest cost.
     '''
 
-    with open(prioritiy_file, "r") as file:
-        players = [player for player in json.load(file)]
+    with PlayerData(prioritiy_file) as player_data:
+        players = player_data.get_players()
 
     def tag_validity_check(tag, player_name):
         assert tag in unique_country_tags, "Invalid country tag " + tag + " for player " + player_name + ".\n Valid tags are: " + ", ".join(
