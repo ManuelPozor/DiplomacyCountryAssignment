@@ -66,7 +66,10 @@
 
         {% if submitted %} <h4>Your priorities have been submitted.</h4>
         <h4> Please wait for the other players to submit their
-            answers. You can change your submission, until all players have voted. </h4> {% endif %}
+            answers. You can change your submission, until all players have voted. </h4>
+        {% endif %}
+
+        <h4>{{submission_count}}/7 players have submitted.</h4> 
 
     </div>
 </body>

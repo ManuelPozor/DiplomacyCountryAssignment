@@ -69,6 +69,9 @@ def country_selection(id):
                            country_names=country_names,
                            priorities=priorities,
                            submitted=already_submitted,
+                           submission_count=sum(
+                               p["submitted"]
+                               for p in player_data.get_players()),
                            zip=zip)
 
 
