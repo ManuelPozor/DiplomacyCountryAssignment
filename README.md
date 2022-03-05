@@ -27,7 +27,8 @@ As a first step, create a local virtual environment fulfilling the requirements 
 pipenv install --deploy
 ```
 
-Now, you can already start a server by specifying a JSON file to store the player information and a text file to store the result (optional).
+Now, you can already start a server by simply calling the **server.py**.
+It is also possible to specify a JSON file to store the player information or a text file to store the result (optional).
 
 ```bash
 pipenv run py server.py --json player_priorities.json --out result.txt
@@ -37,6 +38,11 @@ This starts a local Flask webserver and generates IDs for each player which can 
 Player names can also be adjusted there.
 Send each player the server address link followed by "/\<id\>" with the respective ID of the player as a path.
 Keep the IDs of players private to ensure anonymity.
+The player choices or generated IDs stored in the JSON can be reset by running the server with these flags:
+
+```bash
+pipenv run py server.py --reset --id-gen
+```
 
 The webinterface allows each player to select their 3 favorite countries.
 Once players have submitted their priorities, they will have to wait for others to make their decision but, until then, can change their choice via resubmission.
@@ -44,16 +50,27 @@ After all players have submitted, the algorithm determines the best combination.
 Player can then see their assigned country using the same link.
 The country distribution is also stored in an output text file and printed along with the calculated minimal cost in the console.
 
-The player choices or generated IDs stored in the JSON can be reset by running the server with these flags:
+
+### Run from Docker image
+
+The code can also be run inside a Docker container.
+Either load or build the Docker image.
 
 ```bash
-pipenv run py server.py --reset --id-gen
+docker build -t diplo .
 ```
+
+Then, execute the image with the following command:
+
+```bash
+docker run diplo
+```
+
 
 ### Country assignment optimisation
 
 You can also manually fill in the player choices in the JSON file and run the assignment directly.
-Note that the countries are stored as acronyms __["GB", "FR", "GE", "IT", "AH", "RU", "OE"]__.
+Note that the countries are stored as acronyms ["GB", "FR", "GE", "IT", "AH", "RU", "OE"].
 
 ```bash
 pipenv run py country_assignment.py --json player_priorities.json --out result.txt
