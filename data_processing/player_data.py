@@ -35,9 +35,6 @@ class PlayerData():
     def get_players(self):
         return self.players
 
-    def set_players(self, players):
-        self.players = players
-
     def get_players_by_id(self):
         ''' Return dict of players with their ID as key. '''
         players_by_id = {p['id']: p for p in self.players}
