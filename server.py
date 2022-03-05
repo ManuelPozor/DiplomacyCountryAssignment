@@ -1,4 +1,4 @@
-from priority_assignment import assign_countries_by_priority
+from country_assignment import assign_countries_by_priority
 from data_processing.player_data import PlayerData
 
 from flask import (Flask, redirect, render_template, request, url_for, flash)
