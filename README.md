@@ -31,7 +31,7 @@ Now, you can already start a server by simply calling the **server.py**.
 It is also possible to specify a JSON file to store the player information or a text file to store the result (optional).
 
 ```bash
-pipenv run py server.py --json player_priorities.json --out result.txt
+pipenv run python server.py --json player_priorities.json --out result.txt
 ```
 
 This starts a local Flask webserver and generates IDs for each player which can be found in the specified JSON file.
@@ -41,7 +41,7 @@ Keep the IDs of players private to ensure anonymity.
 The player choices or generated IDs stored in the JSON can be reset by running the server with these flags:
 
 ```bash
-pipenv run py server.py --reset --id-gen
+pipenv run python server.py --reset --id-gen
 ```
 
 The webinterface allows each player to select their 3 favorite countries.
@@ -73,7 +73,7 @@ You can also manually fill in the player choices in the JSON file and run the as
 Note that the countries are stored as acronyms ["GB", "FR", "GE", "IT", "AH", "RU", "OE"].
 
 ```bash
-pipenv run py country_assignment.py --json player_priorities.json --out result.txt
+pipenv run python country_assignment.py --json player_priorities.json --out result.txt
 ```
 
 The algorithm assigns countries by weighting the priorities with low penalties for the top priorities and higher penalties for low priority or unfavored countries.
